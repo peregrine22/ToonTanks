@@ -17,6 +17,8 @@ APawnTank::APawnTank()
 void APawnTank::BeginPlay()
 {
 	Super::BeginPlay();
+
+	PlayerController = Cast<APlayerController>(GetController());
 }
 
 void APawnTank::Tick(float DeltaTime)
@@ -25,6 +27,13 @@ void APawnTank::Tick(float DeltaTime)
 
 	Rotate();
 	Move();
+	if (PlayerController)
+	{
+		FHitResult hitResult;
+		PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
+		FVector hitLocation = hitResult.ImpactPoint;
+		RotateTurret(hitLocation);
+	}
 }
 
 void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -32,6 +41,7 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("MoveForward", this, &APawnTank::CalculateMovementInput);
 	PlayerInputComponent->BindAxis("Turn", this, &APawnTank::CalculateRotationInput);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APawnTank::Fire);
 }
 
 void APawnTank::CalculateMovementInput(float InputValue)
@@ -54,4 +64,11 @@ void APawnTank::Move()
 void APawnTank::Rotate()
 {
 	AddActorLocalRotation(RotationDirection, true);
+}
+
+
+void APawnTank::HandleDestruction()
+{
+	Super::HandleDestruction();
+	// Hide Player - new function
 }

@@ -3,6 +3,7 @@
 
 #include "PawnBase.h"
 #include "Components/CapsuleComponent.h"
+#include "ToonTanks/Actors/ProjectileBase.h"
 
 // Sets default values
 APawnBase::APawnBase()
@@ -42,5 +43,39 @@ void APawnBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+
+void APawnBase::RotateTurret(FVector Target)
+{
+	// update turretmesh rotation to face towards the target passed in from child class
+	// turretmesh->setworldlocation
+	FVector targetCalculated = FVector(Target.X, Target.Y, TurretMesh->GetComponentLocation().Z);
+	FVector startLocation = TurretMesh->GetComponentLocation();
+	FRotator turretRotation = FVector(targetCalculated - startLocation).Rotation();
+	TurretMesh->SetWorldRotation(turretRotation);
+}
+
+void APawnBase::Fire()
+{
+	// get projectile location && rotation -> spawn projectile class at location firing towards location
+	UE_LOG(LogTemp, Warning, TEXT("Fire"));
+	if (Projectile)
+	{
+		FVector SpawnLocation = ProjectileSpawnPoint->GetComponentLocation();
+		FRotator SpawnRotation = ProjectileSpawnPoint->GetComponentRotation();
+		 
+		AProjectileBase* tempProjectile = GetWorld()->SpawnActor<AProjectileBase>(Projectile, SpawnLocation, SpawnRotation);
+		tempProjectile->SetOwner(this);
+	}
+}
+
+void APawnBase::HandleDestruction()
+{
+	// play death effect particle
+
+	// -- pawnturret - inform gamemodeturret died -> destroy self()
+
+	// -- pawntank - inform gamemode player died -> then hide() all components && stop movement input
 }
 
