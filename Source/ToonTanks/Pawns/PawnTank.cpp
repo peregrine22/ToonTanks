@@ -36,6 +36,12 @@ void APawnTank::Tick(float DeltaTime)
 	}
 }
 
+
+bool APawnTank::GetIsPlayerAlive()
+{
+	return bIsPlayerAlive;
+}
+
 void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -71,4 +77,8 @@ void APawnTank::HandleDestruction()
 {
 	Super::HandleDestruction();
 	// Hide Player - new function
+	bIsPlayerAlive = false;
+
+	SetActorHiddenInGame(true);
+	SetActorTickEnabled(false);
 }
