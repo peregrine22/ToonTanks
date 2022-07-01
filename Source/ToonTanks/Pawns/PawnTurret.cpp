@@ -37,8 +37,9 @@ float APawnTurret::GetDistanceToPlayer()
 {
 	if (!PlayerPawn)
 		return 0.0f;
+	float dist = FVector::Dist(PlayerPawn->GetActorLocation(), GetActorLocation());
 
-	return FVector::Dist(PlayerPawn->GetActorLocation(), GetActorLocation());
+	return dist;
 }
 
 

@@ -31,9 +31,9 @@ void AToonTanksGameModeBase::ActorDied(AActor* DeadActor)
 			PlayerController->SetPlayerEnabled(false);
 		}
 	}
-	else if(APawnTurret* destroyedTurret = Cast<APawnTurret>(DeadActor))
+	else if(APawnBase* destroyedPawn = Cast<APawnTurret>(DeadActor))
 	{
-		destroyedTurret->HandleDestruction();
+		destroyedPawn->HandleDestruction();
 		if (--TargetTurrets == 0)
 		{
 			HandleGameOver(true);
@@ -50,8 +50,6 @@ int32 AToonTanksGameModeBase::GetTurretCurrentCount()
 
 void AToonTanksGameModeBase::HandleGameStart()
 {
-	// initialize the start countdown, turret activasion, pawn check, etc
-
 	TargetTurrets = GetTurretCurrentCount();
 	PlayerTank = Cast<APawnTank>(UGameplayStatics::GetPlayerPawn(this, 0));
 	PlayerController = Cast<APlayerControllerBase>(UGameplayStatics::GetPlayerController(this, 0));

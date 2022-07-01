@@ -78,7 +78,6 @@ void APawnTank::HandleDestruction()
 	Super::HandleDestruction();
 	// Hide Player - new function
 	bIsPlayerAlive = false;
-
 	SetActorHiddenInGame(true);
 	SetActorTickEnabled(false);
 }
